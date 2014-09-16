@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "activesupport", "~> 4.1.6"
   s.add_dependency "activerecord", "~> 4.1.6"
+  s.add_dependency "ds_hash"
   # s.add_dependency "rspec-rails"
 
   s.add_development_dependency "sqlite3"

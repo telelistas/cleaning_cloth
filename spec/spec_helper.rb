@@ -9,6 +9,8 @@
 # require "paperclip/matchers"
 require 'byebug'
 require 'factory_girl'
+require "cleaning_cloth"
+require "active_support"
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib/cleaning_cloth'))
 
