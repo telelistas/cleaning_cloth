@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "" do
+describe "cleaning_cloth" do
 
   subject { create(:post) }
 
