@@ -11,15 +11,16 @@ Gem::Specification.new do |s|
   s.email       = ["del.soft.99@gmail.com"]
   s.homepage    = "https://github.com/telelistas/cleaning-cloth"
   s.summary     = "An Rails/Active Record extension. You will clean all atributes of active record"
-  s.description = "An Rails/Active Record extension. You will clean all atributes of active record"
+  s.description = "An simple way to clear atrributes in active record"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
 
-  s.add_dependency "activesupport", "> 3.2"
-  s.add_dependency "activerecord", "> 3.2"
-  s.add_dependency "ds_hash"
+  s.add_dependency "activesupport", "~> 3.2", "~> 4.1"
+  s.add_dependency "activerecord", "~> 3.2", "~> 4.1"
+  s.add_dependency "ds_hash", "~> 1"
 
-  s.add_development_dependency "sqlite3"
-  s.add_development_dependency "rspec-rails"
+  s.add_development_dependency "sqlite3", "~> 1.3"
+  s.add_development_dependency "rspec-rails", "~> 3.1"
+  s.add_development_dependency "factory_girl", "~> 4.4"
 end
