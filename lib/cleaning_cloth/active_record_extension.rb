@@ -1,63 +1,46 @@
+# encoding: utf-8
 require 'active_record'
 
 class ActiveRecord::Base
 
   unless self.method_defined? 'clean!'
-    
+ 
     def clean! opts={}
-      byebug
-      define_non_cyclic_method(:jaca) {
-      #return if self.instance_variable_get('@lock_clean')
-      #begin
-        #self.instance_variable_set('@lock_clean',true)
-        opts ||= {}
-        opts[:except] = Array(opts[:except] || []) + [:id, :create_at, :updated_at]
-      
-        all_attributes = self.instance_variable_get('@attributes')
-        opts[:include] = opts[:include] || Array(all_attributes)
 
-        all_attributes.each do |attr_name, attr_value|          
-          attr_name = attr_name.to_sym
-          self.send("write_attribute", attr_name, nil) unless opts[:except].include? attr_name
-        end
+        opts ||= {}
+        opts[:max_level] ||= 3
+        return if opts[:max_level] <= 0
+      
+        exceptions = Array(opts[:except] || []) + [:id, :create_at, :updated_at]
+        includes = Array(opts[:includes] || []) # includes, caso queira incluir os campos excluidos por padrão: :id, :created_at e etc
+        exceptions.reject! {|item| includes.include?(item) }
+
+        all_attributes = self.attributes || {}
 
         all_associations = self.class.reflect_on_all_associations.map &:name
+        all_associations.reject! {|item| exceptions.include?(item)}
+
         all_associations.each do |assoc_name|
           data = self.send(assoc_name)
           next unless data.present?
           Array(data).each do |obj|
-            assoc_name = obj.class.name.downcase.to_sym
-            next if opts[:except].include?(assoc_name) 
-            obj_opts = opts.deep_fetch(:include, assoc_name)
+            obj_opts = opts.deep_fetch(assoc_name, {}) 
+            obj_opts[:max_level] = opts[:max_level] - 1
             obj.clean! obj_opts 
           end
         end
 
+        all_attributes.each do |attr_name, attr_value|          
+          attr_name = attr_name.to_sym
+          next if exceptions.include?(attr_name) && attr_value == self.send(attr_name)
+          value = exceptions.include?(attr_name) ? attr_value : nil
+          self.send("write_attribute", attr_name, value) 
+        end
+        
         self
-      }
-      #ensure
-       # self.instance_variable_set('@lock_clean',false)
-      #end
-#protected
 
-    end # unless
-        def define_non_cyclic_method(name, &block)
-          return if self.method_defined?(name)
-          define_method(name) do |*args|
-            result = true; @_already_called ||= {}
-            # Loop prevention for validation of associations
-            unless @_already_called[name]
-              begin
-                @_already_called[name]=true
-                result = instance_eval(&block)
-              ensure
-                @_already_called[name]=false
-              end
-            end
+    end # clean!
 
-            result
-          end
-        end      
   end 
 end
   

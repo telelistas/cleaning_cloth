@@ -37,6 +37,7 @@ end
  
 class Comment < ActiveRecord::Base
   belongs_to :post
+  belongs_to :jaca, class_name: 'Post'
 end
 
 class Author < ActiveRecord::Base

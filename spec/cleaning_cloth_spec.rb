@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "" do
-  # include Support::Database
 
   subject { create(:post) }
 
@@ -21,7 +20,7 @@ describe "" do
   end
 
   context "after cleaning cloth" do
-    before { subject.clean! }
+    subject { create(:post).clean! }
 
     it { subject.id.should be_present }
     it { subject.title.should be_nil }
@@ -31,6 +30,22 @@ describe "" do
 
     it { author.id.should be_present }
     it { author.name.should be_nil }
+
+
+    context "with exceptions params" do
+
+        subject { create(:post).clean!({ except: :title, comments: { except: :comment } }) }
+  
+        it { subject.id.should be_present }
+        it { subject.title.should be_present }
+  
+        it { comment.id.should be_present }
+        it { comment.comment.should be_present }
+  
+        it { author.id.should be_present }
+        it { author.name.should be_nil }
+  
+    end
 
   end
 end
