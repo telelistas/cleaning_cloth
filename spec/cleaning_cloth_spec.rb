@@ -13,37 +13,43 @@ describe "cleaning_cloth" do
 
     it { comment.id.should be_present }
     it { comment.comment.should be_present }
+    it { comment.post_id.should be_present }
 
     it { author.id.should be_present }
     it { author.name.should be_present }
+    it { author.should be_present }
 
   end
 
   context "after cleaning cloth" do
-    subject { create(:post).clean! }
+    subject { @post = create(:post); @post.clean!; @post.save!; @post }
 
     it { subject.id.should be_present }
     it { subject.title.should be_nil }
 
     it { comment.id.should be_present }
     it { comment.comment.should be_nil }
+    it { comment.post_id.should be_present }
 
     it { author.id.should be_present }
     it { author.name.should be_nil }
+    it { author.should be_present }
 
 
     context "with exceptions params" do
 
-        subject { create(:post).clean!({ except: :title, comments: { except: :comment } }) }
+        subject { @post = create(:post).clean!({ except: :title, comments: { except: :comment } }); @post.save!; @post }
   
         it { subject.id.should be_present }
         it { subject.title.should be_present }
   
         it { comment.id.should be_present }
         it { comment.comment.should be_present }
+        it { comment.post_id.should be_present }
   
         it { author.id.should be_present }
         it { author.name.should be_nil }
+        it { author.should be_present }
   
     end
     context "with default clean options" do
@@ -54,6 +60,8 @@ describe "cleaning_cloth" do
             { except: :title, comments: { except: :comment } }
           end
           @post.clean! 
+          @post.save!
+          @post
         }
   
         it { subject.id.should be_present }
@@ -61,9 +69,11 @@ describe "cleaning_cloth" do
   
         it { comment.id.should be_present }
         it { comment.comment.should be_present }
-  
+        it { comment.post_id.should be_present }
+
         it { author.id.should be_present }
         it { author.name.should be_nil }
+        it { author.should be_present }
   
     end
 
