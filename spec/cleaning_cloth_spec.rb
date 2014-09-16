@@ -46,6 +46,26 @@ describe "cleaning_cloth" do
         it { author.name.should be_nil }
   
     end
+    context "with default clean options" do
+
+        subject { 
+          @post = create(:post)
+          def @post.default_clean_options
+            { except: :title, comments: { except: :comment } }
+          end
+          @post.clean! 
+        }
+  
+        it { subject.id.should be_present }
+        it { subject.title.should be_present }
+  
+        it { comment.id.should be_present }
+        it { comment.comment.should be_present }
+  
+        it { author.id.should be_present }
+        it { author.name.should be_nil }
+  
+    end
 
   end
 end

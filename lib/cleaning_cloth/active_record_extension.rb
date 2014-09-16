@@ -5,9 +5,9 @@ class ActiveRecord::Base
 
   unless self.method_defined? 'clean!'
  
-    def clean! opts={}
+    def clean! opts=nil
 
-        opts ||= {}
+        opts ||= default_clean_options
         opts[:max_level] ||= 3
         return if opts[:max_level] <= 0
       
@@ -40,6 +40,10 @@ class ActiveRecord::Base
         self
 
     end # clean!
+
+    def default_clean_options
+      {}
+    end
 
   end 
 end
