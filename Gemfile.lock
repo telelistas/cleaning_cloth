@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cleaning_cloth (0.0.2)
+    cleaning_cloth (0.0.4)
       activerecord (< 4.3)
       activesupport (< 4.3)
       ds_hash (~> 1)

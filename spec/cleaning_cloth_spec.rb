@@ -52,6 +52,24 @@ describe "cleaning_cloth" do
         it { author.should be_present }
   
     end
+
+    context "with exception all associations" do
+
+        subject { @post = create(:post).clean!({ except: :all_associations}); @post.save!; @post }
+  
+        it { subject.id.should be_present }
+        it { subject.title.should be_nil }
+  
+        it { comment.id.should be_present }
+        it { comment.comment.should be_present }
+        it { comment.post_id.should be_present }
+  
+        it { author.id.should be_present }
+        it { author.name.should be_present }
+        it { author.should be_present }
+  
+    end
+
     context "with default clean options" do
 
         subject { 
