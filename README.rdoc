@@ -1,3 +1,11 @@
-= CleaningCloth2
+= CleaningCloth
+
+== install
+
+  gem 'cleaning_cloth'
+  
+
+
+  
 
 This project rocks and uses MIT-LICENSE.
