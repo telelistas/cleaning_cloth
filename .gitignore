@@ -32,3 +32,4 @@ bower.json
 
 *.gem
 
+test/dummy/log/*

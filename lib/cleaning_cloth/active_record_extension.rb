@@ -16,10 +16,17 @@ class ActiveRecord::Base
         exceptions.reject! {|item| includes.include?(item) }
 
         all_attributes = self.attributes || {}
+        all_associations = self.class.reflect_on_all_associations
+        
+        assoc_exceptions = all_associations.map {|assoc| assoc.foreign_key }
+        
+        exceptions += assoc_exceptions
+        exceptions.uniq!
+        exceptions.compact!
+        exceptions.map! &:to_sym
 
         unless exceptions.include? :all_associations
-          all_associations = self.class.reflect_on_all_associations
-            all_associations.reject! {|item| exceptions.include?(item.name)}
+          all_associations.reject! {|item| exceptions.include?(item.name)}
   
           all_associations.each do |assoc|
             assoc_name = assoc.name
@@ -27,7 +34,6 @@ class ActiveRecord::Base
             next unless data.present?
             Array(data).each do |obj|
               obj_opts = opts.deep_fetch(assoc_name, {}) 
-              obj_opts[:except] = Array(obj_opts[:except]) + [assoc.foreign_key.to_sym] 
               obj_opts[:max_level] = opts[:max_level] - 1
               obj.clean! obj_opts 
             end
